@@ -1,5 +1,4 @@
 require 'base64'
-require 'stdlib/object'
 require 'net/https'
 require 'json'
 
@@ -20,7 +19,7 @@ class PlotImage
   def plot_image(data, image_path, image_type, layout = {})
     raise "image_type #{image_type} not supported" unless VALID_IMAGE_FORMATS.include?(image_type)
 
-    payload = { :figure => {:data => data.box, :layout => layout}, :format => image_type.to_s }.to_json
+    payload = { :figure => {:data => data, :layout => layout}, :format => image_type.to_s }.to_json
     headers = {
       'plotly-client-platform' => PLOTLY_CLIENT_PLATFORM,
       'authorization' => "Basic #{@encoded_auth}",
