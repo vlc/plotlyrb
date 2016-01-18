@@ -1,4 +1,5 @@
 require 'backports'
 
-require_relative 'plotlyrb/version.rb'
-require_relative 'plotlyrb/plot_image.rb'
+require_relative 'plotlyrb/version'
+require_relative 'plotlyrb/api_v2'
+require_relative 'plotlyrb/plot_image'

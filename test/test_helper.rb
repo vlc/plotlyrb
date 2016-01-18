@@ -3,5 +3,5 @@ require 'test/unit'
 
 require File.expand_path('../../lib/plotlyrb', __FILE__)
 
-USERNAME = 'XXX'
-API_KEY = 'XXX'
+USERNAME = 'PlotlyImageTest'
+API_KEY = '786r5mecv0'
