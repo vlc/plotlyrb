@@ -28,7 +28,7 @@ Gem::Specification.new do |spec|
   spec.require_paths = ["lib"]
   spec.required_ruby_version = '>= 1.8.7'
 
-  spec.add_runtime_dependency 'backports', '~> 3.3.0'
+  spec.add_runtime_dependency 'backports', '~> 3.6', '>= 3.6.0'
 
   spec.add_development_dependency "bundler", "~> 1.11"
   spec.add_development_dependency "rake", "~> 10.0"
