@@ -22,7 +22,8 @@ Or install it yourself as:
 
 ## Usage
 
-```data = {
+```ruby
+  data = {
   :x => ['2013-10-04 22:23:00', '2013-11-04 22:23:00', '2013-12-04 22:23:00'],
   :y => [1, 3, 6],
   :type => 'scatter'
@@ -33,7 +34,8 @@ layout = { :xaxis => { :title => 'times' },
 }
 
 plotly = Plotlyrb::PlotImage.new('my-plotly-username', 'my-plotly-api-key')
-plotly.plot_image(data, 'plot.png', :png, layout)```
+plotly.plot_image(data, 'plot.png', :png, layout)
+```
 
 ## TODO
 - [ ] Support height and width
