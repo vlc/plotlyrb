@@ -8,16 +8,20 @@ module Plotlyrb
     HOSTNAME = 'api.plot.ly'
     BASE_PATH = 'v2'
     BASE_URI = "#{PROTOCOL}://#{HOSTNAME}/#{BASE_PATH}"
-
     IMAGES = URI.parse("#{BASE_URI}/images")
+    COMMON_HEADERS = {
+      'plotly-client-platform' => "Ruby #{Plotlyrb::VERSION}",
+      'content-type' => 'application/json'
+    }
 
-    def self.headers(username, api_key)
+    def self.plotly
+      Plotly.new(COMMON_HEADERS)
+    end
+
+    def self.auth_plotly(username, api_key)
       encoded_auth = Base64.encode64("#{username}:#{api_key}")
-      {
-        'plotly-client-platform' => "Ruby #{Plotlyrb::VERSION}",
-        'authorization' => "Basic #{encoded_auth}",
-        'content-type' => 'application/json'
-      }
+      headers_hash = COMMON_HEADERS.merge({ 'authorization' => "Basic #{encoded_auth}" })
+      Plotly.new(headers_hash)
     end
   end
 end
