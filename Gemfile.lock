@@ -1,14 +1,14 @@
 PATH
   remote: .
   specs:
-    plotlyrb (0.1.2)
-      backports (~> 3.6, >= 3.6.0)
+    plotlyrb (0.1.4)
 
 GEM
   remote: https://rubygems.org/
   specs:
-    backports (3.6.6)
+    backports (3.6.7)
     colored (1.2)
+    json_pure (1.8.3)
     metaclass (0.0.4)
     mocha (1.1.0)
       metaclass (~> 0.0.1)
@@ -24,6 +24,7 @@ DEPENDENCIES
   backports (~> 3.6)
   bundler (~> 1.11)
   colored
+  json_pure
   mocha
   plotlyrb!
   rake (~> 10.0)

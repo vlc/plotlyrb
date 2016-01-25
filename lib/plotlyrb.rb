@@ -1,4 +1,4 @@
-require 'backports'
+require 'backports' if RUBY_VERSION < '1.9.3'
 
 require_relative 'plotlyrb/version'
 require_relative 'plotlyrb/api_v2'
