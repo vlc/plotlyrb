@@ -5,7 +5,7 @@ di = Gem::DependencyInstaller.new
 begin
   if RUBY_VERSION < '1.9.3'
     puts 'Installing backports'
-    di.install 'backports', '~> 3.6'
+    di.install 'backports', '3.3.0'
     di.install 'json_pure'
   end
 rescue => e

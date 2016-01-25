@@ -1,19 +1,13 @@
-PATH
-  remote: .
-  specs:
-    plotlyrb (0.1.4)
-
 GEM
   remote: https://rubygems.org/
   specs:
-    backports (3.6.7)
+    backports (3.3.0)
     colored (1.2)
     json_pure (1.8.3)
     metaclass (0.0.4)
     mocha (1.1.0)
       metaclass (~> 0.0.1)
     power_assert (0.2.7)
-    rake (10.5.0)
     test-unit (3.1.5)
       power_assert
 
@@ -21,13 +15,10 @@ PLATFORMS
   ruby
 
 DEPENDENCIES
-  backports (~> 3.6)
-  bundler (~> 1.11)
+  backports (= 3.3.0)
   colored
   json_pure
   mocha
-  plotlyrb!
-  rake (~> 10.0)
   test-unit
 
 BUNDLED WITH
