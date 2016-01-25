@@ -6,7 +6,7 @@ require 'plotlyrb/version'
 Gem::Specification.new do |spec|
   spec.name          = "plotlyrb"
   spec.version       = Plotlyrb::VERSION
-  spec.authors       = ["Veitchlister Consulting"]
+  spec.authors       = ["Veitch Lister Consulting"]
   spec.email         = ["developers@veitchlister.com.au"]
 
   spec.summary       = %q{A Ruby wrapper around the Plotly RESTful API.}
