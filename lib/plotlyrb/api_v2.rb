@@ -8,7 +8,14 @@ module Plotlyrb
     HOSTNAME = 'api.plot.ly'
     BASE_PATH = 'v2'
     BASE_URI = "#{PROTOCOL}://#{HOSTNAME}/#{BASE_PATH}"
-    IMAGES = URI.parse("#{BASE_URI}/images")
+
+    def self.mk_endpoint(path)
+      URI.parse("#{BASE_URI}/#{path}")
+    end
+    IMAGES = mk_endpoint('images')
+    GRIDS = mk_endpoint('grids')
+    PLOTS = mk_endpoint('plots')
+
     COMMON_HEADERS = {
       'plotly-client-platform' => "Ruby #{Plotlyrb::VERSION}",
       'content-type' => 'application/json'
