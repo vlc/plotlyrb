@@ -1,3 +1,5 @@
+require File.expand_path('../../test_helper', __FILE__)
+
 module Plotlyrb
   class GridTest < Test::Unit::TestCase
     def test_get_image
