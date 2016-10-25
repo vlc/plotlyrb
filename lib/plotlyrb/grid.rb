@@ -1,8 +1,6 @@
 require 'net/https'
 require 'json'
 
-require 'response'
-
 module Plotlyrb
   class Grid
     def initialize(headers)
