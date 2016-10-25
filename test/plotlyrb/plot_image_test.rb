@@ -1,4 +1,5 @@
 require File.expand_path('../../test_helper', __FILE__)
+require 'tempfile'
 
 module Plotlyrb
   class PlotImageTest < Test::Unit::TestCase
