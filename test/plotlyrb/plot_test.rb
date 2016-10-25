@@ -4,10 +4,12 @@ require_relative './grid_test'
 module Plotlyrb
   class PlotTest < Test::Unit::TestCase
     def test_column_uid_from_name
-      r = {'file' => {'cols' => [{'name' => 'barry', 'uid' => '123'},
-                               {'name' => 'fred',  'uid' => '456'}]}}
+      r = {'file' => {
+             'fid' => 'user:idlocal',
+             'cols' => [{'name' => 'barry', 'uid' => '123'},
+                        {'name' => 'fred',  'uid' => '456'}]}}
       uid = Plot.column_uid_from_name(r, 'barry')
-      assert_equal('123', uid, "barry's uid is equal")
+      assert_equal('user:idlocal:123', uid, "barry's uid is equal")
     end
 
     def test_create_from_grid
