@@ -2,8 +2,7 @@ require File.expand_path('../../test_helper', __FILE__)
 
 module Plotlyrb
   class GridTest < Test::Unit::TestCase
-    def test_create_grid
-      plotly = Plotlyrb::ApiV2.auth_plotly(USERNAME, API_KEY)
+    def self.create_grid(plotly)
       data = {
         :cols => {
           :pokemon => {:data => ['bulbasaur', 'charmander', 'squirtle'], :order => 0},
@@ -11,7 +10,12 @@ module Plotlyrb
         }
       }
       # no parent - create in root directory for account
-      response = plotly.create_grid(data, nil)
+      plotly.create_grid(data, nil)
+    end
+
+    def test_create_grid
+      plotly = Plotlyrb::ApiV2.auth_plotly(USERNAME, API_KEY)
+      response = self.class.create_grid(plotly)
       assert(response.success)
 
       body_hash = nil

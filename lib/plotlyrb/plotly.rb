@@ -12,8 +12,8 @@ module Plotlyrb
       Grid.new(@headers).create(*args)
     end
 
-    def create_plot(*args)
-      Plot.new(@headers).create(*args)
+    def create_plot_from_grid(*args)
+      Plot.new(@headers).create_from_grid(*args)
     end
   end
 end
