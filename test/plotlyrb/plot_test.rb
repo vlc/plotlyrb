@@ -17,7 +17,6 @@ module Plotlyrb
 
       data = {:type => 'scatter', :name => 'create from grid test'}
       rsp = plotly.create_plot_from_grid(data, grid_response, 'pokemon', 'count')
-      p rsp.inspect
       assert(rsp.success, 'Plotly says it created the plot')
     end
   end
