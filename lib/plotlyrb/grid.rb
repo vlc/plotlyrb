@@ -11,7 +11,7 @@ module Plotlyrb
 
     # data is a hash that mirrors the format of the data hash in the API
     # https://api.plot.ly/v2/grids#create
-    def create(data, parent)
+    def create(data)
       payload = {:data => data}.to_json
       request = Net::HTTP::Post.new(ApiV2::GRIDS.path, @headers)
       request.body = payload

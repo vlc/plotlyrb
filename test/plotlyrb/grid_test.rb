@@ -10,7 +10,7 @@ module Plotlyrb
         }
       }
       # no parent - create in root directory for account
-      plotly.create_grid(data, nil)
+      plotly.create_grid(data)
     end
 
     def test_create_grid
