@@ -25,8 +25,7 @@ module Plotlyrb
       IO.binwrite(image_path_with_ext, response.body)
     end
 
-    private:
-    def column_uid_from_name(response, name)
+    def self.column_uid_from_name(response, name)
       cols = response.fetch('file', {}).
                       fetch('cols', [])
       maybe_col = cols.select { |c| c.fetch('name') == name}
