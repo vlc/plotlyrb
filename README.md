@@ -75,6 +75,12 @@ After checking out the repo, run `bin/setup` to install dependencies. You can al
 
 To install this gem onto your local machine, run `bundle exec rake install`. To release a new version, update the version number in `version.rb`, and then run `bundle exec rake release`, which will create a git tag for the version, push git commits and tags, and push the `.gem` file to [rubygems.org](https://rubygems.org).
 
+If `bundle exec rake release` hangs after pushing changes and tags, you may need to kill it and authenticate against rubygems.org before trying again. First, make sure you have a rubygems account and have been added as an owner of the gem. Then you may authenticate from the command line by doing the following (sourced from [stack overflow](http://stackoverflow.com/a/20284960/510722) of course)
+
+```bash
+curl -u <rubygems-handle> https://rubygems.org/api/v1/api_key.yaml > ~/.gem/credentials; chmod 0600 ~/.gem/credentials
+```
+
 ## Contributing
 
 Bug reports and pull requests are welcome on GitHub at https://github.com/[USERNAME]/plotlyrb. This project is intended to be a safe, welcoming space for collaboration, and contributors are expected to adhere to the [Contributor Covenant](http://contributor-covenant.org) code of conduct.
