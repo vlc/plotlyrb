@@ -14,7 +14,7 @@ module Plotlyrb
     # column names (must appear in grid), and a layout. Extracts the column references from the
     # grid response to populate the xsrc # and ysrc fields in data.
     # See https://api.plot.ly/v2/plots#create
-    def create_from_grid(plot_spec, grid_json, layout = {})
+    def create_from_grid(plot_spec, grid_json)
       grid_response_body = JSON.parse(grid_json)
       return Response.fail('No :figure key in plot spec') unless plot_spec.has_key?(:figure)
       unless plot_spec[:figure].has_key?(:data)
