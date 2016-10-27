@@ -3,14 +3,17 @@ require File.expand_path('../../test_helper', __FILE__)
 module Plotlyrb
   class GridTest < Test::Unit::TestCase
     def self.create_grid(plotly)
-      data = {
-        :cols => {
-          :pokemon => {:data => ['bulbasaur', 'charmander', 'squirtle'], :order => 0},
-          :count => {:data => [1, 2, 42], :order => 1}
+      grid_spec =
+        {
+          :data => {
+            :cols => {
+              :pokemon => {:data => ['bulbasaur', 'charmander', 'squirtle'], :order => 0},
+              :count => {:data => [1, 2, 42], :order => 1}
+            }
+          }
         }
-      }
-      # no parent - create in root directory for account
-      plotly.create_grid(data)
+
+      plotly.create_grid(grid_spec)
     end
 
     def test_create_grid

@@ -9,12 +9,11 @@ module Plotlyrb
       @https.use_ssl = true
     end
 
-    # data is a hash that mirrors the format of the data hash in the API
+    # data is a hash that mirrors the format of the hash in the API
     # https://api.plot.ly/v2/grids#create
-    def create(data)
-      payload = {:data => data}.to_json
+    def create(grid_spec)
       request = Net::HTTP::Post.new(ApiV2::GRIDS.path, @headers)
-      request.body = payload
+      request.body = grid_spec.to_json
       Response.from_http_response(@https.request(request))
     end
   end
