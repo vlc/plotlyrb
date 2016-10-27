@@ -31,22 +31,35 @@ Or install it yourself as:
 ```ruby
 require 'plotlyrb'
 
-data = {
-  :x => ['2013-10-04 22:23:00', '2013-11-04 22:23:00', '2013-12-04 22:23:00'],
-  :y => [1, 3, 6],
-  :type => 'scatter',
-  :mode => 'markers',
-}
+# NOTE: data argument must be an array of traces
+data = [
+  {
+    :x => ['2013-10-04 22:23:00', '2013-11-04 22:23:00', '2013-12-04 22:23:00'],
+    :y => [1, 3, 6],
+    :type => 'scatter',
+    :mode => 'markers',
+  },
+  {
+    :pokemon => ['pikachu', 'squirtle', 'charmander'],
+    :number_caught => [1, 3, 9],
+    :type => 'scatter'
+  }
+]
 
 layout = {
   :xaxis => { :title => 'times' },
   :yaxis => { :title => 'bigfoot sightings', :range => [0, 7] },
 }
 
+plot_spec = {
+  :figure => {:data => data},
+  :layout => layout,
+  :format => :svg
+}
+
 plotly = Plotlyrb::ApiV2.auth_plotly('username', 'super secret API key')
 
-# NOTE: data argument must be an array of traces
-plotly.plot_image([data], '/path/to/plot.svg', :svg, layout)
+plotly.plot_image(plot_spec, '/path/to/plot.svg')
 ```
 
 ## TODO
