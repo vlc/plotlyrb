@@ -15,6 +15,10 @@ module Plotlyrb
       end
     end
 
+    def self.fail(msg)
+      new(false, '', msg, [msg])
+    end
+
     # s is a Net::HTTP::Response body we expect to contain JSON map with a list of errors
     def self.get_errors(s)
       msg_key = 'message'
