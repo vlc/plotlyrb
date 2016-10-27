@@ -29,11 +29,16 @@ module Plotlyrb
       grid_response = GridTest.create_grid(plotly)
       assert(grid_response.success, 'Plotly says it creatd the grid')
 
-      data = [{:type => 'scatter',
-               :name => 'create from grid test',
-               :xsrc => 'pokemon',
-               :ysrc => 'count'}]
-      rsp = plotly.create_plot_from_grid(data, grid_response.body)
+      plot_spec = { :figure => {
+                      :data => [{
+                        :type => 'scatter',
+                        :name => 'create from grid test',
+                        :xsrc => 'pokemon',
+                        :ysrc => 'count'
+                      }]
+                    }
+                  }
+      rsp = plotly.create_plot_from_grid(plot_spec, grid_response.body)
       assert(rsp.success, 'Plotly says it created the plot')
     end
   end

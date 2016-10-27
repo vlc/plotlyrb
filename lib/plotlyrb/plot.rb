@@ -14,18 +14,30 @@ module Plotlyrb
     # column names (must appear in grid), and a layout. Extracts the column references from the
     # grid response to populate the xsrc # and ysrc fields in data.
     # See https://api.plot.ly/v2/plots#create
-    def create_from_grid(data, grid_json, layout = {})
+    def create_from_grid(plot_spec, grid_json)
       grid_response_body = JSON.parse(grid_json)
+      return Response.fail('No :figure key in plot spec') unless plot_spec.has_key?(:figure)
+      unless plot_spec[:figure].has_key?(:data)
+        return Response.fail('No :data key at {:figure => {:data => ...}} in plot spec')
+      end
+
       begin
-        payload_data = data.map { |d| self.class.replace_column_names_with_uids(grid_response_body, d) }
+        payload_data = plot_spec[:figure][:data].map { |d|
+          self.class.replace_column_names_with_uids(grid_response_body, d)
+        }
       rescue => e
         return Response.fail(e.to_s)
       else
-        payload = { :figure => { :data => payload_data, :layout => layout } }.to_json
+        payload = self.class.replace_data_in_spec(plot_spec, payload_data)
         request = Net::HTTP::Post.new(ApiV2::PLOTS.path, @headers)
-        request.body = payload
+        request.body = payload.to_json
         Response.from_http_response(@https.request(request))
       end
+    end
+
+    def self.replace_data_in_spec(spec, new_data)
+      new_figure = spec[:figure].merge({:data => new_data})
+      spec.merge({:figure => new_figure})
     end
 
     def self.replace_column_names_with_uids(response_body, trace_data)
