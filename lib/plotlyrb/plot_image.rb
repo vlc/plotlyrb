@@ -12,14 +12,18 @@ module Plotlyrb
       @https.use_ssl = true
     end
 
-    def plot_image(data, image_path, image_type, layout = {})
-      raise "image_type #{image_type} not supported" unless VALID_IMAGE_FORMATS.include?(image_type)
-      payload = { :figure => { :data => data, :layout => layout }, :format => image_type.to_s }.to_json
+    def plot_image(plot_image_spec, image_path)
+      raise 'No :format key in spec' unless plot_image_spec.has_key?(:format)
+      raise 'No :figure key in spec' unless plot_image_spec.has_key?(:figure)
+      raise ':data key not found at {:figure => {:data => ...}}' unless plot_image_spec[:figure].has_key?(:data)
+
+      image_format = plot_image_spec[:format]
+      raise "Image format #{image_format} not supported" unless VALID_IMAGE_FORMATS.include?(image_format.to_sym)
+
       request = Net::HTTP::Post.new(ApiV2::IMAGES.path, @headers)
-      request.body = payload
+      request.body = plot_image_spec.to_json
       response = @https.request(request)
-      image_path_with_ext = "#{image_path}"
-      IO.binwrite(image_path_with_ext, response.body)
+      IO.binwrite(image_path, response.body)
     end
   end
 end
