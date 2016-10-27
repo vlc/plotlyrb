@@ -6,7 +6,7 @@ begin
   if RUBY_VERSION < '1.9.3'
     puts 'Installing backports'
     di.install 'backports', '3.3.0'
-    di.install 'json_pure'
+    di.install 'json_pure', '<2.0.2'
   end
 rescue => e
   warn "#{$0}: #{e}"
