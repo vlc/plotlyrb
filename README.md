@@ -2,7 +2,13 @@
 
 Use [plotly](https://plot.ly) to graph your data.
 
-Currently only supports `plot_image`, which uses the REST API to generate an image for your plot. See [the python reference](https://plot.ly/python/reference/) for details on what you can plot.
+Currently only supports `plot_image`, `create_grid`, and `create_plot_from_grid`.
+
+ - `plot_image` generates an image for your plot
+ - `create_grid` creates grid data accessible through the web interface
+ - `create_plot_from_grid` creates a plot based on the JSON representation of a grid
+
+See [the python reference](https://plot.ly/python/reference/) for details on what you can plot.
 
 ## Installation
 
