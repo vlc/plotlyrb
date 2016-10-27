@@ -23,6 +23,8 @@ module Plotlyrb
     end
 
     def test_create_from_grid
+      # This is obviously an integration test, not a true unit test. Plotly needs to know about
+      # the grid we're creating a plot from so that the column uid references exist.
       plotly = Plotlyrb::ApiV2.auth_plotly(USERNAME, API_KEY)
       grid_response = GridTest.create_grid(plotly)
       assert(grid_response.success, 'Plotly says it creatd the grid')
