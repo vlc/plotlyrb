@@ -28,7 +28,6 @@ module Plotlyrb
       end
     end
 
-    # replace_column_names_with_uids :: Map -> Map -> Either Response Map
     def self.replace_column_names_with_uids(response_body, trace_data)
       raise('No :xsrc key in trace data') unless trace_data.has_key?(:xsrc)
       raise('No :ysrc key in trace data') unless trace_data.has_key?(:ysrc)
