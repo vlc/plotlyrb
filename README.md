@@ -43,19 +43,18 @@ data = [
   {
     :x => ['2013-10-04 22:23:00', '2013-11-04 22:23:00', '2013-12-04 22:23:00'],
     :y => [3, 4, 9],
-    :type => 'scatter'
+    :type => 'scatter',
     :name => 'Andrew N'
   }
 ]
 
 layout = {
   :xaxis => { :title => 'times' },
-  :yaxis => { :title => 'pokemon caught', :range => [0, 7] },
+  :yaxis => { :title => 'pokemon caught', :range => [0, 10] },
 }
 
 plot_spec = {
-  :figure => {:data => data},
-  :layout => layout,
+  :figure => {:data => data, :layout => layout},
   :format => :svg
 }
 
