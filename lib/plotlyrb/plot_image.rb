@@ -25,5 +25,33 @@ module Plotlyrb
       response = @https.request(request)
       IO.binwrite(image_path, response.body)
     end
+
+    AsyncJobResult = Struct.new(:success, :spec, :path)
+
+    class AsyncJob < Struct.new(:thread, :spec, :path, :start_time, :timeout)
+      def self.from_spec_path(pi, spec, path, timeout)
+        thread = Thread.new { pi.plot_image(spec, path) }
+        new(thread, spec, path, Time.new, timeout)
+      end
+
+      def join
+        now = Time.new
+        join_wait = (self.timeout - (now - self.start_time)).to_i + 1
+        # If join returns nil after the timeout, it means the thread hasn't finished
+        r = AsyncJobResult.new(!(self.thread.join(join_wait).nil?), spec, path)
+      end
+    end
+
+    # Given [spec, image_path] pairs, run each plot_image request in a separate
+    # thread, wait timeout for each, then return list of results. Results flag success
+    # and include spec and path from request if user wants to rerun.
+    # [(spec, image_path)] -> Integer -> ()
+    def self.plot_images(headers, spec_path_pairs, timeout)
+      spec_path_pairs.
+        map { |sp| AsyncJob.from_spec_path(PlotImage.new(headers), sp[0], sp[1], timeout) }.
+        inject([]) { |results, j|
+          results << j.join
+        }
+    end
   end
 end

@@ -8,6 +8,10 @@ module Plotlyrb
       PlotImage.new(@headers).plot_image(*args)
     end
 
+    def plot_images(*args)
+      PlotImage.plot_images(@headers, *args)
+    end
+
     def create_grid(*args)
       Grid.new(@headers).create(*args)
     end
