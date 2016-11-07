@@ -23,9 +23,9 @@ module Plotlyrb
 
     def test_plot_images
       num_requests = 5
-      spec_paths = (1..num_requests).inject([]) { |sps, i|
+      spec_paths = (1..num_requests).to_a.map { |i|
         tmp_file = Tempfile.new("get_image_test#{i+1}").path
-        sps << [DATA, tmp_file]
+        [DATA, tmp_file]
       }
 
       results = plotly.plot_images(spec_paths, TIMEOUT)

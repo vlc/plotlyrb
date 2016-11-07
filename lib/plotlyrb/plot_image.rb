@@ -49,9 +49,7 @@ module Plotlyrb
     def self.plot_images(headers, spec_path_pairs, timeout)
       spec_path_pairs.
         map { |sp| AsyncJob.from_spec_path(PlotImage.new(headers), sp[0], sp[1], timeout) }.
-        inject([]) { |results, j|
-          results << j.join
-        }
+        map(&:join)
     end
   end
 end
