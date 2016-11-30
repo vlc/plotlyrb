@@ -55,8 +55,9 @@ module Plotlyrb
         map(&:join)
     end
 
-    def self.async_failures(rs)
-      rs.reject(&:success)
+    # Given a list of AsyncJobResult (return from plot_images), return the SpecPaths that failed
+    def self.failed_spec_paths(rs)
+      rs.reject(&:success).map(&:spec_path)
     end
   end
 end
