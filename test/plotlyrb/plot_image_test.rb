@@ -25,13 +25,13 @@ module Plotlyrb
       num_requests = 5
       spec_paths = (1..num_requests).to_a.map { |i|
         tmp_file = Tempfile.new("get_image_test#{i+1}").path
-        [DATA, tmp_file]
+        PlotImage::SpecPath.new(DATA, tmp_file)
       }
 
       results = plotly.plot_images(spec_paths, TIMEOUT)
       num_requests.times { |i|
         assert(results[i].success, "Image returned successfully")
-        assert(FileUtils.identical?("#{File.dirname(__FILE__)}/../fixtures/get_test.png", spec_paths[i][1]), "File #{i} as expected")
+        assert(FileUtils.identical?("#{File.dirname(__FILE__)}/../fixtures/get_test.png", spec_paths[i].path), "File #{i} as expected")
       }
     end
   end

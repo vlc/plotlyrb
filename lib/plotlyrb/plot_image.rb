@@ -26,19 +26,22 @@ module Plotlyrb
       IO.binwrite(image_path, response.body)
     end
 
-    AsyncJobResult = Struct.new(:success, :spec, :path)
+    SpecPath = Struct.new(:spec, :path)
+    AsyncJobResult = Struct.new(:success, :spec_path)
 
-    class AsyncJob < Struct.new(:thread, :spec, :path, :start_time, :timeout)
-      def self.from_spec_path(pi, spec, path, timeout)
-        thread = Thread.new { pi.plot_image(spec, path) }
-        new(thread, spec, path, Time.new, timeout)
+    class AsyncJob < Struct.new(:thread, :spec_path, :start_time, :timeout)
+      def self.from_spec_path(pi, spec_path, timeout)
+        thread = Thread.new { pi.plot_image(spec_path.spec, spec_path.path) }
+        new(thread, spec_path, Time.new, timeout)
       end
 
       def join
         now = Time.new
         join_wait = (self.timeout - (now - self.start_time)).to_i + 1
         # If join returns nil after the timeout, it means the thread hasn't finished
-        r = AsyncJobResult.new(!(self.thread.join(join_wait).nil?), spec, path)
+        success = !(self.thread.join(join_wait).nil?)
+        self.thread.exit unless success
+        r = AsyncJobResult.new(success, spec_path)
       end
     end
 
@@ -46,10 +49,14 @@ module Plotlyrb
     # thread, wait timeout for each, then return list of results. Results flag success
     # and include spec and path from request if user wants to rerun.
     # [(spec, image_path)] -> Integer -> ()
-    def self.plot_images(headers, spec_path_pairs, timeout)
-      spec_path_pairs.
-        map { |sp| AsyncJob.from_spec_path(PlotImage.new(headers), sp[0], sp[1], timeout) }.
+    def self.plot_images(headers, spec_paths, timeout)
+      spec_paths.
+        map { |sp| AsyncJob.from_spec_path(PlotImage.new(headers), sp, timeout) }.
         map(&:join)
+    end
+
+    def self.async_failures(rs)
+      rs.reject(&:success)
     end
   end
 end
