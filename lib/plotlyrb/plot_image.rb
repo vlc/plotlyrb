@@ -49,10 +49,14 @@ module Plotlyrb
     # thread, wait timeout for each, then return list of results. Results flag success
     # and include spec and path from request if user wants to rerun.
     # [(spec, image_path)] -> Integer -> ()
-    def self.plot_images(headers, spec_paths, timeout)
-      spec_paths.
-        map { |sp| AsyncJob.from_spec_path(PlotImage.new(headers), sp, timeout) }.
-        map(&:join)
+    def self.plot_images(headers, spec_paths, timeout, retries)
+      raise 'Retries must be an integer >= 0' unless (retries.class == Fixnum && retries >= 0)
+
+      (0..retries).to_a.inject(spec_paths) { |sps, _|
+        rs = spec_paths.map { |sp| AsyncJob.from_spec_path(PlotImage.new(headers), sp, timeout) }.
+                        map(&:join)
+        failed_spec_paths(rs)
+      }
     end
 
     # Given a list of AsyncJobResult (return from plot_images), return the SpecPaths that failed

@@ -3,7 +3,9 @@ require 'tempfile'
 
 module Plotlyrb
   class PlotImageTest < Test::Unit::TestCase
+    RETRIES = 0
     TIMEOUT = 5 # seconds
+    EXPECTED_IMAGE = "#{File.dirname(__FILE__)}/../fixtures/get_test.png"
 
     def data
       {:figure => {
@@ -22,7 +24,7 @@ module Plotlyrb
     def test_get_image
       tmp_file = Tempfile.new('get_image_test').path
       plotly.plot_image(data, tmp_file)
-      assert(FileUtils.identical?("#{File.dirname(__FILE__)}/../fixtures/get_test.png", tmp_file), 'File returned should be same')
+      assert(FileUtils.identical?(EXPECTED_IMAGE, tmp_file), 'File returned should be same')
     end
 
     # WARNING: this test depends on network AND plotly's service - may fail when code is fine
@@ -33,10 +35,10 @@ module Plotlyrb
         PlotImage::SpecPath.new(data, tmp_file)
       }
 
-      results = plotly.plot_images(spec_paths, TIMEOUT)
-      num_requests.times { |i|
-        assert(results[i].success, "Image returned successfully")
-        assert(FileUtils.identical?("#{File.dirname(__FILE__)}/../fixtures/get_test.png", spec_paths[i].path), "File #{i} as expected")
+      failures = plotly.plot_images(spec_paths, TIMEOUT, RETRIES)
+      assert(failures.empty?, 'No failures')
+      spec_paths.each { |sp|
+        assert(FileUtils.identical?(EXPECTED_IMAGE, sp.path), "File '#{sp.path}' as expected")
       }
     end
 
