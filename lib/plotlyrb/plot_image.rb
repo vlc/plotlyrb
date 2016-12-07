@@ -38,10 +38,10 @@ module Plotlyrb
       def join
         now = Time.new
         join_wait = (self.timeout - (now - self.start_time)).to_i + 1
-        # If join returns nil after the timeout, it means the thread hasn't finished
-        success = !(self.thread.join(join_wait).nil?)
+        self.thread.join(join_wait)
+        success = File.exist?(spec_path.path) && File.size(spec_path.path) > 1024
         self.thread.exit unless success
-        r = AsyncJobResult.new(success, spec_path)
+        AsyncJobResult.new(success, spec_path)
       end
     end
 
@@ -49,14 +49,21 @@ module Plotlyrb
     # thread, wait timeout for each, then return list of results. Results flag success
     # and include spec and path from request if user wants to rerun.
     # [(spec, image_path)] -> Integer -> ()
-    def self.plot_images(headers, spec_paths, timeout, retries)
+    def self.plot_images(headers, spec_paths, timeout, retries, attempt = 0)
       raise 'Retries must be an integer >= 0' unless (retries.class == Fixnum && retries >= 0)
 
-      (0..retries).to_a.inject(spec_paths) { |sps, _|
-        rs = spec_paths.map { |sp| AsyncJob.from_spec_path(PlotImage.new(headers), sp, timeout) }.
-                        map(&:join)
-        failed_spec_paths(rs)
-      }
+      return if spec_paths.empty?
+
+      if attempt > retries
+        warn("#{spec_paths.size} images not successfully created after #{retries} attempts!")
+        return
+      end
+
+      async_job_results = spec_paths.map { |sp|
+        AsyncJob.from_spec_path(PlotImage.new(headers), sp, timeout)
+      }.map(&:join)
+      failed_paths = failed_spec_paths(async_job_results)
+      plot_images(headers, failed_paths, timeout, retries, attempt + 1)
     end
 
     # Given a list of AsyncJobResult (return from plot_images), return the SpecPaths that failed
