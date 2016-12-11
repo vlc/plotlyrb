@@ -40,27 +40,31 @@ module Plotlyrb
         now = Time.new
         join_wait = (self.timeout - (now - self.start_time)).to_i + 1
 
+        def fail(msg)
+          AsyncJobResult.new(false, msg, spec_path)
+        end
+
         # Joining should bubble any exceptions, so catch them and report the failure as an error
         begin
           msg = ''
           if thread.join(join_wait).nil?
-            msg = "thread didn't finish within timeout (#{timeout}s)"
             thread.exit
+            return fail("thread didn't finish within timeout (#{timeout}s)")
           end
 
           response = thread.value
           unless response.success
-            msg = "Plotly returned error response: #{response}"
+            return fail("Plotly returned error response: #{response}")
           end
 
           unless File.exist?(spec_path.path)
-            msg = "Output file (#{spec_path.path}) not found"
+            return fail("Output file (#{spec_path.path}) not found")
           end
-
-          AsyncJobResult.new(msg.empty?, msg, spec_path)
         rescue => e
-          AsyncJobResult.new(false, e.message, spec_path)
+          return fail(e.message)
         end
+
+        AsyncJobResult.new(true, '', spec_path)
       end
     end
 

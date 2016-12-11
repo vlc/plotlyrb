@@ -23,7 +23,8 @@ module Plotlyrb
     # WARNING: this test depends on network AND plotly's service - may fail when code is fine
     def test_get_image
       tmp_file = Tempfile.new('get_image_test').path
-      plotly.plot_image(data, tmp_file)
+      response = plotly.plot_image(data, tmp_file)
+      assert(response.success)
       assert(FileUtils.identical?(EXPECTED_IMAGE, tmp_file), 'File returned should be same')
     end
 
