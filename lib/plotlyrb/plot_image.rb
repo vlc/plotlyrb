@@ -1,5 +1,3 @@
-require 'response'
-
 require 'net/https'
 require 'json'
 
@@ -25,7 +23,7 @@ module Plotlyrb
       request = Net::HTTP::Post.new(ApiV2::IMAGES.path, @headers)
       request.body = plot_image_spec.to_json
       response = Response.from_http_response(@https.request(request))
-      IO.binwrite(image_path, response.body) if response.success?
+      IO.binwrite(image_path, response.body) if response.success
       response
     end
 
@@ -75,16 +73,11 @@ module Plotlyrb
 
       return if spec_paths.empty?
 
-      if attempt > retries
-        warn("#{spec_paths.size} images not successfully created after #{retries} attempts!")
-        return
-      end
-
-      async_job_results = spec_paths.map { |sp|
-        AsyncJob.from_spec_path(PlotImage.new(headers), sp, timeout)
-      }.map(&:join)
-      failed_paths = failed_spec_paths(async_job_results)
-      plot_images(headers, failed_paths, timeout, retries, attempt + 1)
+      (0..retries).to_a.inject(spec_paths) { |sps, _|
+        rs = spec_paths.map { |sp| AsyncJob.from_spec_path(PlotImage.new(headers), sp, timeout) }.
+                        map(&:join)
+        failed_spec_paths(rs)
+      }
     end
 
     # Given a list of AsyncJobResult (return from plot_images), return the SpecPaths that failed

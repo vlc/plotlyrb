@@ -36,7 +36,7 @@ module Plotlyrb
     end
 
     def to_s
-      "#{success ? 'Succeeded' ? 'Failed'}: #{msg}"
+      "#{success ? 'Succeeded' : 'Failed'}: #{msg}"
     end
   end
 end
