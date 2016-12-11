@@ -46,7 +46,6 @@ module Plotlyrb
 
         # Joining should bubble any exceptions, so catch them and report the failure as an error
         begin
-          msg = ''
           if thread.join(join_wait).nil?
             thread.exit
             return fail("thread didn't finish within timeout (#{timeout}s)")
