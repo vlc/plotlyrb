@@ -68,25 +68,21 @@ module Plotlyrb
       end
     end
 
-    # Given [spec, image_path] pairs, run each plot_image request in a separate
-    # thread, wait timeout for each, then return list of results. Results flag success
-    # and include spec and path from request if user wants to rerun.
-    # [(spec, image_path)] -> Integer -> ()
+    # Given an array of SpecPaths, run each plot_image request in a separate
+    # thread, wait timeout for each, then return an array of pairs of SpecPaths and the
+    # result for those that failed.
     def self.plot_images(headers, spec_paths, timeout, retries, attempt = 0)
       raise 'Retries must be an integer >= 0' unless (retries.class == Fixnum && retries >= 0)
+      return [] if spec_paths.empty?
 
-      return if spec_paths.empty?
-
-      (0..retries).to_a.inject(spec_paths) { |sps, _|
-        rs = spec_paths.map { |sp| AsyncJob.from_spec_path(PlotImage.new(headers), sp, timeout) }.
-                        map(&:join)
-        failed_spec_paths(rs)
+      input_results = spec_paths.map { |sp| AsyncJobResult.new(false, 'not run yet', sp) }
+      (0..retries).to_a.inject(input_results) { |ajrs, _|
+        # While you might be tempted to fuse these map calls, we want all the jobs to get started
+        # before we start joining them, so don't do that.
+        rs = ajrs.map { |ajr| AsyncJob.from_spec_path(PlotImage.new(headers), ajr.spec_path, timeout) }.
+                  map(&:join).
+                  reject(&:success)
       }
-    end
-
-    # Given a list of AsyncJobResult (return from plot_images), return the SpecPaths that failed
-    def self.failed_spec_paths(rs)
-      rs.reject(&:success).map(&:spec_path)
     end
   end
 end
