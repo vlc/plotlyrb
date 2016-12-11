@@ -68,10 +68,10 @@ module Plotlyrb
       end
     end
 
-    # Given an array of SpecPaths, run each plot_image request in a separate
-    # thread, wait timeout for each, then return an array of pairs of SpecPaths and the
-    # result for those that failed.
-    def self.plot_images(headers, spec_paths, timeout, retries, attempt = 0)
+    # Given an array of SpecPaths, run each plot_image request in a separate thread, wait timeout
+    # for each, then return AsyncJobResults for any inputs that failed after the given number of
+    # retries
+    def self.plot_images(headers, spec_paths, timeout, retries)
       raise 'Retries must be an integer >= 0' unless (retries.class == Fixnum && retries >= 0)
       return [] if spec_paths.empty?
 
