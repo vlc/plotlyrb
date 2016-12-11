@@ -43,7 +43,7 @@ module Plotlyrb
     end
 
     def test_failed_spec_paths
-      fake_results = [[true, 1], [false, 2], [false, 3], [true, 4]].map { |s,n| PlotImage::AsyncJobResult.new(s, n) }
+      fake_results = [[true, '', 1], [false, '', 2], [false, '', 3], [true, '', 4]].map { |s,n| PlotImage::AsyncJobResult.new(s, n) }
       failures = PlotImage.failed_spec_paths(fake_results)
       assert_equal(2, failures.size)
       assert_equal(Set.new([2,3]), Set.new(failures))

@@ -1,3 +1,5 @@
+require 'response'
+
 require 'net/https'
 require 'json'
 
@@ -22,12 +24,13 @@ module Plotlyrb
 
       request = Net::HTTP::Post.new(ApiV2::IMAGES.path, @headers)
       request.body = plot_image_spec.to_json
-      response = @https.request(request)
-      IO.binwrite(image_path, response.body)
+      response = Response.from_http_response(@https.request(request))
+      IO.binwrite(image_path, response.body) if response.success?
+      response
     end
 
     SpecPath = Struct.new(:spec, :path)
-    AsyncJobResult = Struct.new(:success, :spec_path)
+    AsyncJobResult = Struct.new(:success, :message, :spec_path)
 
     class AsyncJob < Struct.new(:thread, :spec_path, :start_time, :timeout)
       def self.from_spec_path(pi, spec_path, timeout)
@@ -38,10 +41,28 @@ module Plotlyrb
       def join
         now = Time.new
         join_wait = (self.timeout - (now - self.start_time)).to_i + 1
-        self.thread.join(join_wait)
-        success = File.exist?(spec_path.path) && File.size(spec_path.path) > 1024
-        self.thread.exit unless success
-        AsyncJobResult.new(success, spec_path)
+
+        # Joining should bubble any exceptions, so catch them and report the failure as an error
+        begin
+          msg = ''
+          if thread.join(join_wait).nil?
+            msg = "thread didn't finish within timeout (#{timeout}s)"
+            thread.exit
+          end
+
+          response = thread.value
+          unless response.success
+            msg = "Plotly returned error response: #{response}"
+          end
+
+          unless File.exist?(spec_path.path)
+            msg = "Output file (#{spec_path.path}) not found"
+          end
+
+          AsyncJobResult.new(msg.empty?, msg, spec_path)
+        rescue => e
+          AsyncJobResult.new(false, e.message, spec_path)
+        end
       end
     end
 
