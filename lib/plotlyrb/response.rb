@@ -34,5 +34,9 @@ module Plotlyrb
     def self.all_have_key?(hs, key)
       hs.all? { |h| h.has_key?(key) }
     end
+
+    def to_s
+      "#{success ? 'Succeeded' : 'Failed'}: #{msg}"
+    end
   end
 end
