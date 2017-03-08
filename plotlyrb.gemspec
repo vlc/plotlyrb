@@ -10,7 +10,7 @@ Gem::Specification.new do |spec|
   spec.email         = ["developers@veitchlister.com.au"]
 
   spec.summary       = %q{A Ruby wrapper around the Plotly RESTful API.}
-  spec.description   = %q{Trying to complete a complete API based on the Python Library https://github.com/plotly/plotly.py/tree/master/plotly/plotly}
+  spec.description   = %q{Plotly features added as needed. Uses Python Library as a reference https://github.com/plotly/plotly.py/tree/master/plotly/plotly}
   spec.homepage      = "https://github.com/vlc/plotlyrb"
   spec.license       = "MIT"
 
